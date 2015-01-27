@@ -3,8 +3,7 @@ package org.kymjs.music.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.tsz.afinal.FinalBitmap;
-
+import org.kymjs.kjframe.KJBitmap;
 import org.kymjs.music.R;
 import org.kymjs.music.bean.Music;
 import org.kymjs.music.utils.ListData;
@@ -24,12 +23,14 @@ import android.widget.TextView;
  */
 public class LrcListAdapter extends BaseAdapter {
 
-    private Context context;
+    private final Context context;
     private List<Music> datas;
     private String imgUrl;
+    private final KJBitmap kjb;
 
     public LrcListAdapter(Context context) {
         super();
+        kjb = KJBitmap.create();
         this.context = context;
         this.datas = Player.getPlayer().getList();
         if (datas == null) {
@@ -93,8 +94,7 @@ public class LrcListAdapter extends BaseAdapter {
                 .getId()) {
             if (imgUrl != null) {
                 holder.img.setVisibility(View.VISIBLE);
-                FinalBitmap fb = FinalBitmap.create(context);
-                fb.display(holder.img, imgUrl);
+                kjb.display(holder.img, imgUrl);
             } else {
                 holder.img.setImageResource(R.drawable.img_playing);
                 holder.img.setVisibility(View.VISIBLE);
@@ -104,5 +104,4 @@ public class LrcListAdapter extends BaseAdapter {
         }
         return v;
     }
-
 }

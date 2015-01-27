@@ -1,13 +1,12 @@
 package org.kymjs.music.ui;
 
-import net.tsz.afinal.annotation.view.ViewInject;
-
-import org.kymjs.music.AppManager;
+import org.kymjs.kjframe.KJActivity;
+import org.kymjs.kjframe.ui.BindView;
+import org.kymjs.kjframe.widget.KJViewPager;
+import org.kymjs.kjframe.widget.KJViewPager.OnViewChangeListener;
 import org.kymjs.music.Config;
 import org.kymjs.music.R;
 import org.kymjs.music.service.ScanMusic;
-import org.kymjs.music.ui.widget.ScrollLayout;
-import org.kymjs.music.ui.widget.ScrollLayout.OnViewChangeListener;
 import org.kymjs.music.utils.PreferenceHelper;
 
 import android.content.BroadcastReceiver;
@@ -26,25 +25,28 @@ import android.widget.TextView;
  * @author kymjs
  * 
  */
-public class FirstInstallActivity extends BaseActivity implements
+public class FirstInstallActivity extends KJActivity implements
         OnViewChangeListener {
     private LinearLayout pointLayout;
-    private ScrollLayout scrollLayout;
+    private KJViewPager scrollLayout;
     private Button mBtnStart;
     private int count;
     private ImageView[] imgs;
     private int currentItem;
     private String scanToast;
 
-    @ViewInject(id = R.id.scan_music_title)
+    @BindView(id = R.id.scan_music_title)
     private TextView scanMusicName;
 
     @Override
-    public void initWidget() {
+    public void setRootView() {
         setContentView(R.layout.aty_welcome_first);
+    }
 
+    @Override
+    public void initWidget() {
         pointLayout = (LinearLayout) findViewById(R.id.pointLayout);
-        scrollLayout = (ScrollLayout) findViewById(R.id.scrollLayout);
+        scrollLayout = (KJViewPager) findViewById(R.id.scrollLayout);
         mBtnStart = (Button) findViewById(R.id.startBtn);
         count = scrollLayout.getChildCount();
         imgs = new ImageView[count];
@@ -55,7 +57,7 @@ public class FirstInstallActivity extends BaseActivity implements
         }
         currentItem = 0;
         imgs[currentItem].setEnabled(false);
-        scrollLayout.setOnViewChangeLintener(this);
+        scrollLayout.setOnViewChangeListener(this);
         mBtnStart.setOnClickListener(this);
 
         loadRes();
@@ -76,6 +78,7 @@ public class FirstInstallActivity extends BaseActivity implements
         }
     };
 
+    @Override
     protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         IntentFilter filter = new IntentFilter();
@@ -90,24 +93,9 @@ public class FirstInstallActivity extends BaseActivity implements
         unregisterReceiver(scanReceiver);
     }
 
-    // 设置当前点
-    @Override
-    public void onViewChange(int postion) {
-        if (postion < 0 || postion > count - 1 || currentItem == postion) {
-            return;
-        }
-        imgs[currentItem].setEnabled(true);
-        imgs[postion].setEnabled(false);
-        currentItem = postion;
-        if (postion == count - 2) {
-            scanMusicName.setText(scanToast);
-        }
-    }
-
     @Override
     public void widgetClick(View v) {
         startActivity(new Intent(this, Main.class));
-        AppManager.getAppManager().finishActivity();
     }
 
     /**
@@ -125,5 +113,20 @@ public class FirstInstallActivity extends BaseActivity implements
     private void writeLog() {
         PreferenceHelper.write(this, Config.FIRSTINSTALL_FILE,
                 Config.FIRSTINSTALL_KEY, false);
+    }
+
+    // 设置当前点
+    @Override
+    public void OnViewChange(int postion) {
+        if (postion < 0 || postion > count - 1 || currentItem == postion) {
+            return;
+        }
+        imgs[currentItem].setEnabled(true);
+        imgs[postion].setEnabled(false);
+        currentItem = postion;
+        if (postion == count - 2) {
+            scanMusicName.setText(scanToast);
+        }
+
     }
 }

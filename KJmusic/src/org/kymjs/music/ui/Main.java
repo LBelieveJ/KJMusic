@@ -1,6 +1,8 @@
 package org.kymjs.music.ui;
 
-import org.kymjs.music.AppManager;
+import org.kymjs.kjframe.KJActivity;
+import org.kymjs.kjframe.ui.KJActivityStack;
+import org.kymjs.kjframe.ui.ViewInject;
 import org.kymjs.music.Config;
 import org.kymjs.music.R;
 import org.kymjs.music.service.PlayerService;
@@ -10,7 +12,6 @@ import org.kymjs.music.ui.widget.ResideMenu;
 import org.kymjs.music.ui.widget.ResideMenuItem;
 import org.kymjs.music.utils.ImageUtils;
 import org.kymjs.music.utils.Player;
-import org.kymjs.music.utils.UIHelper;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -38,7 +39,7 @@ import android.widget.TextView;
  * 
  * @author kymjs
  */
-public class Main extends BaseActivity {
+public class Main extends KJActivity {
 
     private ResideMenu resideMenu;
     private ResideMenuItem itemDown;
@@ -49,8 +50,8 @@ public class Main extends BaseActivity {
 
     /** 音乐播放器服务 */
     public PlayerService mPlayersService;
-    private Connection conn = new Connection();
-    private MusicChangeReceiver changeReceiver = new MusicChangeReceiver();
+    private final Connection conn = new Connection();
+    private final MusicChangeReceiver changeReceiver = new MusicChangeReceiver();
 
     private Button mBtnNext, mBtnPrevious, mBtnPlay;
     private ImageView mImg;
@@ -64,8 +65,12 @@ public class Main extends BaseActivity {
     public LyricFragment lyricFragment;
 
     @Override
-    public void initWidget() {
+    public void setRootView() {
         setContentView(R.layout.main_activity);
+    }
+
+    @Override
+    public void initWidget() {
         setUpMenu();
         handleLrcView(); // 要放在lyricFragment之前调用
         lyricFragment = new LyricFragment();
@@ -82,8 +87,8 @@ public class Main extends BaseActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    public void registerBroadcast() {
+        super.registerBroadcast();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Config.RECEIVER_MUSIC_CHANGE);
         filter.addAction(Config.RECEIVER_ERROR);
@@ -225,7 +230,7 @@ public class Main extends BaseActivity {
             } else if (v == itemTimer) {
             } else if (v == itemSettings) {
             } else if (v == itemQuit) {
-                AppManager.getAppManager().AppExit(Main.this);
+                KJActivityStack.create().AppExit(aty);
             }
             resideMenu.closeMenu();
         }
@@ -271,8 +276,8 @@ public class Main extends BaseActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    public void unRegisterBroadcast() {
+        super.unRegisterBroadcast();
         unregisterReceiver(changeReceiver);
     }
 
@@ -288,7 +293,7 @@ public class Main extends BaseActivity {
     class Connection implements ServiceConnection {
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            UIHelper.toast("呀，音乐播放失败，退出再进试试");
+            ViewInject.toast("呀，音乐播放失败，退出再进试试");
             mPlayersService = null;
         }
 
@@ -311,7 +316,7 @@ public class Main extends BaseActivity {
                 }
                 lyricFragment.refreshLrcView();
             } else if (Config.RECEIVER_ERROR.endsWith(intent.getAction())) {
-                UIHelper.toast(intent.getStringExtra("error"));
+                ViewInject.toast(intent.getStringExtra("error"));
             }
         }
     }

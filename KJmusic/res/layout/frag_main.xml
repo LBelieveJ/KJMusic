@@ -31,9 +31,9 @@
 
         <ImageView
             android:id="@+id/collect_cursor"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:scaleType="fitXY"
+            android:scaleType="fitCenter"
             android:src="@drawable/ic_collect_line" />
     </LinearLayout>
 

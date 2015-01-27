@@ -1,10 +1,9 @@
 package org.kymjs.music.ui.fragment;
 
-import java.io.Serializable;
-
-import net.tsz.afinal.FinalDb;
-
-import org.kymjs.music.AppLog;
+import org.kymjs.kjframe.KJDB;
+import org.kymjs.kjframe.ui.KJFragment;
+import org.kymjs.kjframe.ui.ViewInject;
+import org.kymjs.kjframe.utils.KJLoger;
 import org.kymjs.music.Config;
 import org.kymjs.music.R;
 import org.kymjs.music.adapter.LrcListAdapter;
@@ -19,7 +18,6 @@ import org.kymjs.music.utils.ImageUtils;
 import org.kymjs.music.utils.LyricHelper;
 import org.kymjs.music.utils.Player;
 import org.kymjs.music.utils.PreferenceHelper;
-import org.kymjs.music.utils.UIHelper;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -56,16 +54,16 @@ import android.widget.TextView;
  * 
  * @author kymjs
  */
-public class LyricFragment extends BaseFragment {
+public class LyricFragment extends KJFragment {
 
-    private SeekThread mSeekThread = new SeekThread();
-    private SeekHandle mSeekHandle = new SeekHandle();
-    private Player mPlayer = Player.getPlayer();
-    private FinalDb db = FinalDb.create(getActivity(), Config.DB_NAME,
+    private final SeekThread mSeekThread = new SeekThread();
+    private final SeekHandle mSeekHandle = new SeekHandle();
+    private final Player mPlayer = Player.getPlayer();
+    private final KJDB db = KJDB.create(getActivity(), Config.DB_NAME,
             Config.isDebug);
     private DownMusicLrc mDownService;
-    private DownloadReceiver receiver = new DownloadReceiver();
-    private DownloadService conn = new DownloadService();
+    private final DownloadReceiver receiver = new DownloadReceiver();
+    private final DownloadService conn = new DownloadService();
     public static int changeImg = 0; // 更换图片的次数
 
     // 从activity中获取的变量
@@ -87,7 +85,7 @@ public class LyricFragment extends BaseFragment {
     private ImageView mImgNext;
     private ImageView mImgLoop;
     private ImageView mImgMenu;
-    private String[] loopModeStr = { "单曲播放", "单曲循环", "列表播放", "随机播放" };
+    private final String[] loopModeStr = { "单曲播放", "单曲循环", "列表播放", "随机播放" };
 
     // 播放列表部分
     private ListView mPlayList;
@@ -102,12 +100,11 @@ public class LyricFragment extends BaseFragment {
 
     // 歌词lyric部分
     private LrcView lrcView;
-    private LyricHelper lyricHelper = new LyricHelper();
+    private final LyricHelper lyricHelper = new LyricHelper();
 
     @Override
-    public View setView(LayoutInflater inflater, ViewGroup container,
-            Bundle bundle) {
-        View view = inflater.inflate(R.layout.frag_lyric, container, false);
+    protected View inflaterView(LayoutInflater arg0, ViewGroup arg1, Bundle arg2) {
+        View view = arg0.inflate(R.layout.frag_lyric, arg1, false);
         return view;
     }
 
@@ -194,6 +191,7 @@ public class LyricFragment extends BaseFragment {
         adapter = new LrcListAdapter(getActivity());
         mPlayList.setAdapter(adapter);
         mPlayList.setOnItemClickListener(new OnItemClickListener() {
+            @Override
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
                 ((Main) getActivity()).mPlayersService.play(mPlayer.getList(),
@@ -254,6 +252,7 @@ public class LyricFragment extends BaseFragment {
         bottomBar = parentView.findViewById(R.id.lrc_bottom);
         // 防止底部栏点击事件穿透到Activity上
         bottomBar.setOnTouchListener(new OnTouchListener() {
+            @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return true;
             }
@@ -282,17 +281,19 @@ public class LyricFragment extends BaseFragment {
         mSeekBarMusic = (SeekBar) parentView
                 .findViewById(R.id.lrc_seekbar_music);
         mSeekBarMusic.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+            @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 mPlayer.seekTo(seekBar.getProgress());
             }
 
+            @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 mPlayer.seekTo(seekBar.getProgress());
             }
 
+            @Override
             public void onProgressChanged(SeekBar seekBar, int progress,
-                    boolean fromUser) {
-            }
+                    boolean fromUser) {}
         });
     }
 
@@ -311,6 +312,7 @@ public class LyricFragment extends BaseFragment {
 
     @SuppressLint("HandlerLeak")
     class SeekHandle extends Handler {
+        @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             mSeekBarMusic.setMax(msg.arg1);
@@ -327,7 +329,7 @@ public class LyricFragment extends BaseFragment {
         Music music = mPlayer.getMusic();
         switch (parentView.getId()) {
         case R.id.lrc_main_share:
-            UIHelper.toast("分享功能暂无");
+            ViewInject.toast("分享功能暂无");
             break;
         case R.id.lrc_main_collect:
             music.setCollect((music.getCollect() + 1) % 2);
@@ -368,10 +370,10 @@ public class LyricFragment extends BaseFragment {
             PreferenceHelper.write(getActivity(), Config.LOOP_MODE_FILE,
                     Config.LOOP_MODE_KEY, (curLoop + 1) % 4);
             mImgLoop.setImageResource(ImageUtils.getImgLoopBg(getActivity()));
-            UIHelper.toast(loopModeStr[(curLoop + 1) % 4]);
+            ViewInject.toast(loopModeStr[(curLoop + 1) % 4]);
             break;
         case R.id.lrc_btn_menu:
-            UIHelper.toast("正在更换歌曲图片");
+            ViewInject.toast("正在更换歌曲图片");
             ImageUtils.setNetBg(getActivity(), musicImg, music.getTitle(),
                     changeImg++);
             break;
@@ -384,7 +386,7 @@ public class LyricFragment extends BaseFragment {
                 } else {
                     Intent downIntent = new Intent(getActivity(),
                             DownMusicInfo.class);
-                    downIntent.putExtra("music", (Serializable) music);
+                    downIntent.putExtra("music", music);
                     getActivity().startService(downIntent);
                 }
             }
@@ -419,7 +421,7 @@ public class LyricFragment extends BaseFragment {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            UIHelper.toast("歌词下载异常，请重试");
+            ViewInject.toast("歌词下载异常，请重试");
         }
     }
 
@@ -486,7 +488,7 @@ public class LyricFragment extends BaseFragment {
      */
     private void changeMenuState() {
         float y = yUp - yDown;
-        AppLog.kymjs("y=" + y + "-----yup=" + yUp + "-------yDown=" + yDown
+        KJLoger.debug("y=" + y + "-----yup=" + yUp + "-------yDown=" + yDown
                 + "-----歌词界面状态" + ((Main) getActivity()).isOpen);
         if ((y > screenHeight / 2 && getScrollVelocity() > 0)
                 || getScrollVelocity() > SNAP_VELOCITY) {

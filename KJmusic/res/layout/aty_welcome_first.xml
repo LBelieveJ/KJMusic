@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:background="#000000" >
 
-    <org.kymjs.music.ui.widget.ScrollLayout
+    <org.kymjs.kjframe.widget.KJViewPager
         android:id="@+id/scrollLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -48,7 +48,7 @@
                 android:textColor="#ffffff"
                 android:textSize="18sp" />
         </RelativeLayout>
-    </org.kymjs.music.ui.widget.ScrollLayout>
+    </org.kymjs.kjframe.widget.KJViewPager>
 
     <LinearLayout
         android:id="@+id/pointLayout"

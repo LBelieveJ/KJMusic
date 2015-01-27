@@ -2,10 +2,10 @@ package org.kymjs.music.utils;
 
 import java.util.List;
 
+import org.kymjs.kjframe.KJDB;
 import org.kymjs.music.Config;
 import org.kymjs.music.bean.Music;
 
-import net.tsz.afinal.FinalDb;
 import android.content.Context;
 
 /**
@@ -21,7 +21,7 @@ public class ListData {
     private static List<Music> collectList;
 
     private static void refresh(Context context) {
-        FinalDb db = FinalDb.create(context, Config.DB_NAME, Config.isDebug);
+        KJDB db = KJDB.create(context, Config.DB_NAME, Config.isDebug);
         if (localList == null || Config.changeMusicInfo) {
             localList = db.findAll(Music.class);
             Config.changeMusicInfo = false;

@@ -2,8 +2,8 @@ package org.kymjs.music.ui.widget;
 
 import java.util.List;
 
+import org.kymjs.kjframe.utils.DensityUtils;
 import org.kymjs.music.Config;
-import org.kymjs.music.utils.DensityUtils;
 import org.kymjs.music.utils.Player;
 
 import android.content.Context;
@@ -26,31 +26,34 @@ public class LrcView extends View implements ILrcView {
     public final static int DISPLAY_MODE_SCALE = 2;
 
     private List<LrcRow> mLrcRows;
-    private int mMinSeekFiredOffset = 10; // min offset for fire seek action,
-                                          // px;
+    private final int mMinSeekFiredOffset = 10; // min offset for fire seek
+                                                // action,
+    // px;
     private int mHignlightRow = 0; // current singing row , should be
                                    // highlighted.
-    private int mHignlightRowColor = Color.YELLOW;
-    private int mNormalRowColor = Color.WHITE;
-    private int mSeekLineColor = Color.CYAN;
-    private int mSeekLineTextColor = Color.CYAN;
+    private final int mHignlightRowColor = Color.YELLOW;
+    private final int mNormalRowColor = Color.WHITE;
+    private final int mSeekLineColor = Color.CYAN;
+    private final int mSeekLineTextColor = Color.CYAN;
     private int mSeekLineTextSize = DensityUtils.sp2px(getContext(), 10);
-    private int mMinSeekLineTextSize = DensityUtils.sp2px(getContext(), 8);
-    private int mMaxSeekLineTextSize = DensityUtils.sp2px(getContext(), 13);
+    private final int mMinSeekLineTextSize = DensityUtils
+            .sp2px(getContext(), 8);
+    private final int mMaxSeekLineTextSize = DensityUtils.sp2px(getContext(),
+            13);
     // font size of lrc
     private int mLrcFontSize = DensityUtils.sp2px(getContext(), 17);
-    private int mMinLrcFontSize = DensityUtils.sp2px(getContext(), 10);
-    private int mMaxLrcFontSize = DensityUtils.sp2px(getContext(), 30);
-    private int mPaddingY = 10; // padding of each row
-    private int mSeekLinePaddingX = 0; // Seek line padding x
+    private final int mMinLrcFontSize = DensityUtils.sp2px(getContext(), 10);
+    private final int mMaxLrcFontSize = DensityUtils.sp2px(getContext(), 30);
+    private final int mPaddingY = 10; // padding of each row
+    private final int mSeekLinePaddingX = 0; // Seek line padding x
     private int mDisplayMode = DISPLAY_MODE_NORMAL;
     private LrcViewListener mLrcViewListener;
 
     private String mLoadingLrcTip = Config.LRC_TEXT;
 
     private float mLastMotionY;
-    private PointF mPointerOneLastMotion = new PointF();
-    private PointF mPointerTwoLastMotion = new PointF();
+    private final PointF mPointerOneLastMotion = new PointF();
+    private final PointF mPointerTwoLastMotion = new PointF();
     private boolean mIsFirstMove = false;
 
     private String str;
@@ -135,6 +138,7 @@ public class LrcView extends View implements ILrcView {
         }
     }
 
+    @Override
     public void seekLrc(int position) {
         if (mLrcRows == null || position < 0 || position > mLrcRows.size()) {
             return;
@@ -198,6 +202,7 @@ public class LrcView extends View implements ILrcView {
                 + Integer.valueOf(times[1]) * 1000 + Integer.valueOf(times[2]);
     }
 
+    @Override
     public void setListener(LrcViewListener l) {
         mLrcViewListener = l;
     }
@@ -207,10 +212,10 @@ public class LrcView extends View implements ILrcView {
         mLoadingLrcTip = text;
     }
 
-    public String getLoadingTipText(){
+    public String getLoadingTipText() {
         return mLoadingLrcTip;
     }
-    
+
     private void doScale(MotionEvent event) {
 
         if (mDisplayMode == DISPLAY_MODE_SEEK) {
@@ -309,12 +314,14 @@ public class LrcView extends View implements ILrcView {
     }
 
     // 设置歌词行数
+    @Override
     public void setLrc(List<LrcRow> lrcRows) {
         mLrcRows = lrcRows;
         invalidate();
     }
 
     // 设置正在播放的时间段
+    @Override
     public void seekLrcToTime(long time) {
         if (mLrcRows == null || mLrcRows.size() == 0) {
             return;

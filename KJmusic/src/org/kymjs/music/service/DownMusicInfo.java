@@ -3,7 +3,6 @@ package org.kymjs.music.service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -12,7 +11,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.CoreProtocolPNames;
-import org.kymjs.music.AppLog;
+import org.kymjs.kjframe.utils.KJLoger;
 import org.kymjs.music.Config;
 import org.kymjs.music.bean.Music;
 import org.kymjs.music.parser.ParserMusicXML;
@@ -64,7 +63,7 @@ public class DownMusicInfo extends IntentService {
         // e2.printStackTrace();
         // }
         url = url.trim();
-        AppLog.kymjs("这是链接地址：" + url);
+        KJLoger.debug("这是链接地址：" + url);
         BufferedReader br = null;
         try {
             HttpGet get = new HttpGet(url);
@@ -94,14 +93,14 @@ public class DownMusicInfo extends IntentService {
             }
         }
         // 数据获取到，开始解析
-        AppLog.kymjs(getClass() + "-------网络请求：" + xml.toString());
+        KJLoger.debug(getClass() + "-------网络请求：" + xml.toString());
         music = ParserMusicXML.ParserMusic(music, xml.toString());
         if ("0000".equals(music.getLrcId())) {
             ErrHandleUtils.sendErrInfo(this, "没找到歌曲信息，试试手动搜索吧");
         } else {
             // 下载完成，发送广播
             Intent downxml = new Intent(Config.RECEIVER_DOWNLOAD_XML);
-            downxml.putExtra("music", (Serializable) music);
+            downxml.putExtra("music", music);
             sendBroadcast(downxml);
         }
     }

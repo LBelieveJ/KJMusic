@@ -1,8 +1,7 @@
 package org.kymjs.music.service;
 
-import net.tsz.afinal.FinalDb;
-
-import org.kymjs.music.AppLog;
+import org.kymjs.kjframe.KJDB;
+import org.kymjs.kjframe.utils.KJLoger;
 import org.kymjs.music.Config;
 import org.kymjs.music.bean.Music;
 import org.kymjs.music.utils.StringUtils;
@@ -35,7 +34,7 @@ public class ScanMusic extends IntentService {
         if (cursor == null) {
             result = false;
         } else {
-            FinalDb db = FinalDb.create(this, Config.DB_NAME, Config.isDebug);
+            KJDB db = KJDB.create(this, Config.DB_NAME, Config.isDebug);
             db.deleteByWhere(Music.class, null);
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
                     .moveToNext()) {
@@ -61,7 +60,7 @@ public class ScanMusic extends IntentService {
                     music.setLrcId("");
                     db.save(music);
                     count++;
-                    AppLog.debug("找到音乐：" + music.getTitle());
+                    KJLoger.debug("找到音乐：" + music.getTitle());
                 }
             }
             result = true;

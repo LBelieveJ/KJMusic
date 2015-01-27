@@ -1957,7 +1957,6 @@ org.kymjs.music.service.PlayerService -> org.kymjs.music.service.PlayerService:
     org.kymjs.music.service.PlayerService$LocalPlayer localPlayer -> b
     org.kymjs.music.service.PlayerService$SystemReceiver mReceiver -> c
     android.os.IBinder onBind(android.content.Intent) -> onBind
-    void onCreate() -> onCreate
     void onDestroy() -> onDestroy
     org.kymjs.music.bean.Music play(java.util.List,int) -> a
     org.kymjs.music.bean.Music play() -> a
@@ -2309,13 +2308,12 @@ org.kymjs.music.ui.widget.ResideMenu -> org.kymjs.music.ui.widget.e:
     java.util.List getMenuItems() -> getMenuItems
     void setMenuListener(org.kymjs.music.ui.widget.ResideMenu$OnMenuListener) -> setMenuListener
     org.kymjs.music.ui.widget.ResideMenu$OnMenuListener getMenuListener() -> getMenuListener
-    void openMenu() -> a
-    void closeMenu() -> b
+    void closeMenu() -> a
     android.animation.AnimatorSet buildScaleDownAnimation(android.view.View,float,float) -> a
     android.animation.AnimatorSet buildScaleUpAnimation$41852cbe(android.view.View) -> c
     void addIgnoredView(android.view.View) -> a
     void removeIgnoredView(android.view.View) -> b
-    void clearIgnoredViewList() -> c
+    void clearIgnoredViewList() -> b
     boolean isInIgnoredView(android.view.MotionEvent) -> a
     boolean onTouchEvent(android.view.MotionEvent) -> onTouchEvent
     boolean onInterceptTouchEvent(android.view.MotionEvent) -> onInterceptTouchEvent

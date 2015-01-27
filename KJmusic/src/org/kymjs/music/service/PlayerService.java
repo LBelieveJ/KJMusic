@@ -2,12 +2,12 @@ package org.kymjs.music.service;
 
 import java.util.List;
 
-import org.kymjs.music.AppLog;
+import org.kymjs.kjframe.ui.ViewInject;
+import org.kymjs.kjframe.utils.KJLoger;
 import org.kymjs.music.Config;
 import org.kymjs.music.bean.Music;
 import org.kymjs.music.utils.ListData;
 import org.kymjs.music.utils.Player;
-import org.kymjs.music.utils.UIHelper;
 
 import android.app.Notification;
 import android.app.Service;
@@ -26,8 +26,8 @@ import android.telephony.TelephonyManager;
  * 
  */
 public class PlayerService extends Service {
-    private Player mPlayer = Player.getPlayer();
-    private LocalPlayer localPlayer = new LocalPlayer();
+    private final Player mPlayer = Player.getPlayer();
+    private final LocalPlayer localPlayer = new LocalPlayer();
     private SystemReceiver mReceiver;
 
     public class LocalPlayer extends Binder {
@@ -86,7 +86,7 @@ public class PlayerService extends Service {
         Music music = null;
         if (ListData.getLocalList(this) == null
                 || ListData.getLocalList(this).isEmpty()) {
-            UIHelper.toast("亲，还没有歌呢，去扫描一下吧");
+            ViewInject.toast("亲，还没有歌呢，去扫描一下吧");
         } else {
             music = mPlayer.play(this, ListData.getLocalList(this), 0);
         }
@@ -119,7 +119,7 @@ public class PlayerService extends Service {
             play();
         } else {
             music = mPlayer.next(this);
-            AppLog.debug("正在播放：" + music.getTitle());
+            KJLoger.debug("正在播放：" + music.getTitle());
         }
         return music;
     }
@@ -136,7 +136,7 @@ public class PlayerService extends Service {
             play();
         } else {
             music = mPlayer.previous(this);
-            AppLog.debug("正在播放：" + music.getTitle());
+            KJLoger.debug("正在播放：" + music.getTitle());
         }
         return music;
     }

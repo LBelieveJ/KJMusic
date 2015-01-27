@@ -3,9 +3,9 @@ package org.kymjs.music.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kymjs.kjframe.utils.DensityUtils;
 import org.kymjs.music.R;
 import org.kymjs.music.bean.Music;
-import org.kymjs.music.utils.DensityUtils;
 import org.kymjs.music.utils.ListData;
 import org.kymjs.music.utils.UIHelper;
 
@@ -24,8 +24,8 @@ import android.widget.TextView;
  */
 public class CollectListAdapter extends AbsPlayListAdapter {
 
-    private Context context;
-    private int currentPager;
+    private final Context context;
+    private final int currentPager;
     private List<Music> datas = null;
     private PopupWindow mPopup;
 

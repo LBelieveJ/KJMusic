@@ -2,7 +2,8 @@ package org.kymjs.music.utils;
 
 import java.util.List;
 
-import org.kymjs.music.AppManager;
+import org.kymjs.kjframe.ui.KJActivityStack;
+import org.kymjs.kjframe.ui.ViewInject;
 import org.kymjs.music.Config;
 import org.kymjs.music.bean.Music;
 
@@ -31,8 +32,8 @@ public class Player {
 
     private Player() {
         if (list == null || Config.changeMusicInfo) {
-            list = ListData.getLocalList(AppManager.getAppManager()
-                    .currentActivity());
+            list = ListData
+                    .getLocalList(KJActivityStack.create().topActivity());
         }
     }
 
@@ -154,7 +155,7 @@ public class Player {
             playing = Config.PLAYING_PLAY;
             context.sendBroadcast(new Intent(Config.RECEIVER_MUSIC_CHANGE));
         } catch (NullPointerException e) {
-            UIHelper.toast("亲，找不到歌曲了，存储卡拔掉了吗？");
+            ViewInject.toast("亲，找不到歌曲了，存储卡拔掉了吗？");
         }
         return list.get(position);
     }

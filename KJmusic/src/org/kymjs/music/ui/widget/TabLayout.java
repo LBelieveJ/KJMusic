@@ -1,6 +1,6 @@
 package org.kymjs.music.ui.widget;
 
-import org.kymjs.music.AppLog;
+import org.kymjs.kjframe.utils.KJLoger;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -18,15 +18,15 @@ import android.widget.Scroller;
  * 
  */
 public class TabLayout extends ViewGroup {
-    private Scroller mScroller;
+    private final Scroller mScroller;
     private VelocityTracker mVelocityTracker;
     private int mCurScreen;
-    private int mDefaultScreen = 0;
+    private final int mDefaultScreen = 0;
     private static final int TOUCH_STATE_REST = 0;
     private static final int TOUCH_STATE_SCROLLING = 1;
     private static final int SNAP_VELOCITY = 600;
     private int mTouchState = TOUCH_STATE_REST;
-    private int mTouchSlop;
+    private final int mTouchSlop;
     private float mLastMotionX;
     private float mLastMotionY;
     private OnViewChangeListener mOnViewChangeListener;
@@ -177,7 +177,7 @@ public class TabLayout extends ViewGroup {
             mLastMotionY = y;
             mLastMotionX = x;
             scrollBy(deltaX, 0);
-            AppLog.kymjs(getClass() + "-----  " + deltaX + "-------"
+            KJLoger.debug(getClass() + "-----  " + deltaX + "-------"
                     + getWidth() * (getChildCount() - 1));
             break;
         case MotionEvent.ACTION_UP:

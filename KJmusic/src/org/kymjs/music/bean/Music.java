@@ -2,9 +2,8 @@ package org.kymjs.music.bean;
 
 import java.io.Serializable;
 
-import net.tsz.afinal.annotation.sqlite.Id;
-import net.tsz.afinal.annotation.sqlite.Table;
-
+import org.kymjs.kjframe.database.annotate.Id;
+import org.kymjs.kjframe.database.annotate.Table;
 import org.kymjs.music.utils.StringUtils;
 
 /**

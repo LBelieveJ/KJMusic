@@ -3,7 +3,7 @@ package org.kymjs.music.ui.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kymjs.music.AppLog;
+import org.kymjs.kjframe.utils.KJLoger;
 import org.kymjs.music.R;
 
 import android.animation.Animator;
@@ -24,6 +24,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+
+import com.nineoldandroids.view.ViewHelper;
 
 /**
  * @User: special Date: 13-12-10
@@ -55,7 +57,7 @@ public class ResideMenu extends FrameLayout implements
     /** 不想拦截哪个View的触摸屏事件 */
     private List<View> ignoredViews;
     private List<ResideMenuItem> menuItems;
-    private DisplayMetrics displayMetrics = new DisplayMetrics();
+    private final DisplayMetrics displayMetrics = new DisplayMetrics();
     private OnMenuListener menuListener;
 
     public ResideMenu(Context context) {
@@ -159,8 +161,7 @@ public class ResideMenu extends FrameLayout implements
      */
     private void setViewPadding() {
         this.setPadding(view_activity.getPaddingLeft(),
-                view_activity.getPaddingTop(),
-                view_activity.getPaddingRight(),
+                view_activity.getPaddingTop(), view_activity.getPaddingRight(),
                 view_activity.getPaddingBottom());
     }
 
@@ -194,7 +195,7 @@ public class ResideMenu extends FrameLayout implements
      * 打开菜单相关的方法
      */
     private void showOpenMenuRelative() {
-        AppLog.debug("========showOpenMenuRelative198=====");
+        KJLoger.debug("========showOpenMenuRelative198=====");
         setViewPadding();
         scaleDown_activity.start();
         // remove self if has not remove
@@ -209,7 +210,7 @@ public class ResideMenu extends FrameLayout implements
     /**
      * 过渡动画
      */
-    private Animator.AnimatorListener animationListener = new Animator.AnimatorListener() {
+    private final Animator.AnimatorListener animationListener = new Animator.AnimatorListener() {
         @Override
         public void onAnimationStart(Animator animation) {
             if (isOpened) {
@@ -259,13 +260,13 @@ public class ResideMenu extends FrameLayout implements
      */
     private void showMenuItem(ResideMenuItem menuItem, int menu_index) {
         layout_menu.addView(menuItem);
+        ViewHelper.setAlpha(menuItem, 0);
         AnimatorSet scaleUp = new AnimatorSet();
-        scaleUp.playTogether(ObjectAnimator.ofFloat(menuItem,
-                "translationX", -100.f, 0.0f), ObjectAnimator
-                .ofFloat(menuItem, "alpha", 0.0f, 1.0f));
+        scaleUp.playTogether(
+                ObjectAnimator.ofFloat(menuItem, "translationX", -100.f, 0.0f),
+                ObjectAnimator.ofFloat(menuItem, "alpha", 0.0f, 1.0f));
 
-        scaleUp.setInterpolator(AnimationUtils.loadInterpolator(
-                activity,
+        scaleUp.setInterpolator(AnimationUtils.loadInterpolator(activity,
                 android.R.anim.anticipate_overshoot_interpolator));
         // with animation;
         scaleUp.setStartDelay(50 * menu_index);
@@ -273,13 +274,11 @@ public class ResideMenu extends FrameLayout implements
     }
 
     private void buildAnimationSet() {
-        scaleUp_activity = buildScaleUpAnimation(view_activity, 1.0f,
-                1.0f);
+        scaleUp_activity = buildScaleUpAnimation(view_activity, 1.0f, 1.0f);
         scaleUp_shadow = buildScaleUpAnimation(iv_shadow, 1.0f, 1.0f);
-        scaleDown_activity = buildScaleDownAnimation(view_activity,
-                0.5f, 0.5f);
-        scaleDown_shadow = buildScaleDownAnimation(iv_shadow,
-                shadow_ScaleX, 0.59f);
+        scaleDown_activity = buildScaleDownAnimation(view_activity, 0.5f, 0.5f);
+        scaleDown_shadow = buildScaleDownAnimation(iv_shadow, shadow_ScaleX,
+                0.59f);
         scaleUp_activity.addListener(animationListener);
         scaleUp_activity.playTogether(scaleUp_shadow);
         scaleDown_shadow.addListener(animationListener);
@@ -296,14 +295,19 @@ public class ResideMenu extends FrameLayout implements
      */
     private AnimatorSet buildScaleDownAnimation(View target,
             float targetScaleX, float targetScaleY) {
-        AppLog.debug("======buildScaleDownAnimation==298====");
-        AnimatorSet scaleDown = new AnimatorSet();
-        scaleDown.playTogether(ObjectAnimator.ofFloat(target,
-                "scaleX", targetScaleX), ObjectAnimator.ofFloat(
-                target, "scaleY", targetScaleY));
+        KJLoger.debug("======buildScaleDownAnimation==298====");
+        int pivotX = (int) (getScreenWidth() * 1.5);
+        int pivotY = (int) (getScreenHeight() * 0.5);
 
-        scaleDown.setInterpolator(AnimationUtils.loadInterpolator(
-                activity, android.R.anim.decelerate_interpolator));
+        ViewHelper.setPivotX(target, pivotX);
+        ViewHelper.setPivotY(target, pivotY);
+        AnimatorSet scaleDown = new AnimatorSet();
+        scaleDown.playTogether(
+                ObjectAnimator.ofFloat(target, "scaleX", targetScaleX),
+                ObjectAnimator.ofFloat(target, "scaleY", targetScaleY));
+
+        scaleDown.setInterpolator(AnimationUtils.loadInterpolator(activity,
+                android.R.anim.decelerate_interpolator));
         scaleDown.setDuration(250);
         return scaleDown;
     }
@@ -316,13 +320,13 @@ public class ResideMenu extends FrameLayout implements
      * @param targetScaleY
      * @return
      */
-    private AnimatorSet buildScaleUpAnimation(View target,
-            float targetScaleX, float targetScaleY) {
-        AppLog.debug("=======buildScaleUpAnimation=============324");
+    private AnimatorSet buildScaleUpAnimation(View target, float targetScaleX,
+            float targetScaleY) {
+        KJLoger.debug("=======buildScaleUpAnimation=============324");
         AnimatorSet scaleUp = new AnimatorSet();
-        scaleUp.playTogether(ObjectAnimator.ofFloat(target, "scaleX",
-                targetScaleX), ObjectAnimator.ofFloat(target,
-                "scaleY", targetScaleY));
+        scaleUp.playTogether(
+                ObjectAnimator.ofFloat(target, "scaleX", targetScaleX),
+                ObjectAnimator.ofFloat(target, "scaleY", targetScaleY));
         scaleUp.setDuration(250);
         return scaleUp;
     }
@@ -404,8 +408,8 @@ public class ResideMenu extends FrameLayout implements
     }
 
     @Override
-    public boolean onScroll(MotionEvent motionEvent,
-            MotionEvent motionEvent2, float v, float v2) {
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent2,
+            float v, float v2) {
         return false;
     }
 
@@ -415,18 +419,15 @@ public class ResideMenu extends FrameLayout implements
     }
 
     @Override
-    public boolean onFling(MotionEvent motionEvent,
-            MotionEvent motionEvent2, float v, float v2) {
+    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent2,
+            float v, float v2) {
 
-        if (isInIgnoredView(motionEvent)
-                || isInIgnoredView(motionEvent2))
+        if (isInIgnoredView(motionEvent) || isInIgnoredView(motionEvent2))
             return false;
 
-        int distanceX = (int) (motionEvent2.getX() - motionEvent
-                .getX());
-        int distanceY = (int) (motionEvent2.getY() - motionEvent
-                .getY());
-        int screenWidth = (int) getScreenWidth();
+        int distanceX = (int) (motionEvent2.getX() - motionEvent.getX());
+        int distanceY = (int) (motionEvent2.getY() - motionEvent.getY());
+        int screenWidth = getScreenWidth();
 
         if (Math.abs(distanceY) > screenWidth * 0.3)
             return false;

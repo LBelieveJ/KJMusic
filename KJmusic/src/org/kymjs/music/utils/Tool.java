@@ -3,6 +3,7 @@ package org.kymjs.music.utils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.kymjs.kjframe.ui.ViewInject;
 import org.kymjs.music.bean.Music;
 
 import android.content.Context;
@@ -25,7 +26,7 @@ public class Tool {
         Uri ringtoneUri = Uri.parse("file://" + whichMusic.getPath());
         RingtoneManager.setActualDefaultRingtoneUri(context,
                 RingtoneManager.TYPE_RINGTONE, ringtoneUri);
-        UIHelper.toast(context, "已将歌曲设置为来电铃声");
+        ViewInject.toast(context, "已将歌曲设置为来电铃声");
     }
 
     /**
@@ -33,8 +34,7 @@ public class Tool {
      * 
      * @param context
      */
-    public static final void shareToFriend(Context context) {
-    }
+    public static final void shareToFriend(Context context) {}
 
     /**
      * 返回当前系统时间

@@ -1,6 +1,6 @@
 package org.kymjs.music.parser;
 
-import org.kymjs.music.AppLog;
+import org.kymjs.kjframe.utils.KJLoger;
 import org.kymjs.music.bean.Music;
 import org.kymjs.music.utils.ErrHandleUtils;
 
@@ -40,7 +40,7 @@ public class ParserMusicXML {
             music.setDecode(decode);
             music.setLrcId(lrcid);
         } catch (Exception e) {
-            AppLog.debug("xml字串异常，无法解析");
+            KJLoger.debug("xml字串异常，无法解析");
             music.setLrcId("0000");
             return music;
         }
@@ -48,7 +48,7 @@ public class ParserMusicXML {
     }
 
     // http://image.baidu.com/i?tn=baiduimagejson&ie=utf-8&ic=0&rn=20&pn=1&word=
-    public static String ParserMusicImg(Context context,String xml, int i) {
+    public static String ParserMusicImg(Context context, String xml, int i) {
         String imgUrl = xml;
         for (int count = 0; count <= i; count++) {
             int begin = 0, end = 0;

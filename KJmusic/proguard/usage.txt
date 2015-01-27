@@ -1784,7 +1784,7 @@ org.kymjs.music.ui.widget.LrcView:
     public static final int DISPLAY_MODE_SEEK
     public static final int DISPLAY_MODE_SCALE
 org.kymjs.music.ui.widget.ResideMenu:
-    191:191:public boolean isOpened()
+    190:190:public boolean isOpened()
 org.kymjs.music.ui.widget.ResideMenuItem:
     28:30:public ResideMenuItem(android.content.Context)
     33:37:public ResideMenuItem(android.content.Context,int,int)

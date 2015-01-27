@@ -3,10 +3,9 @@ package org.kymjs.music.utils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import net.tsz.afinal.FinalBitmap;
-import net.tsz.afinal.FinalHttp;
-import net.tsz.afinal.http.AjaxCallBack;
-
+import org.kymjs.kjframe.KJBitmap;
+import org.kymjs.kjframe.KJHttp;
+import org.kymjs.kjframe.http.HttpCallBack;
 import org.kymjs.music.Config;
 import org.kymjs.music.R;
 import org.kymjs.music.parser.ParserMusicXML;
@@ -39,14 +38,14 @@ public class ImageUtils {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        FinalHttp fh = new FinalHttp();
-        fh.get(word, new AjaxCallBack<String>() {
+        KJHttp kjh = new KJHttp();
+        kjh.get(word, new HttpCallBack() {
             @Override
             public void onSuccess(String t) {
                 super.onSuccess(t);
-                FinalBitmap fb = FinalBitmap.create(context);
+                KJBitmap kjb = KJBitmap.create();
                 String u = ParserMusicXML.ParserMusicImg(context, t, i);
-                fb.display(iv, u);
+                kjb.display(iv, u);
             }
         });
     }

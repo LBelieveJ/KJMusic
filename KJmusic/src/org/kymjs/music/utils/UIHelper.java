@@ -1,8 +1,7 @@
 package org.kymjs.music.utils;
 
-import net.tsz.afinal.FinalDb;
-
-import org.kymjs.music.AppManager;
+import org.kymjs.kjframe.KJDB;
+import org.kymjs.kjframe.utils.DensityUtils;
 import org.kymjs.music.Config;
 import org.kymjs.music.R;
 import org.kymjs.music.bean.Music;
@@ -15,7 +14,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.PopupWindow;
-import android.widget.Toast;
 
 /**
  * 应用程序UI相关工具类
@@ -25,8 +23,7 @@ import android.widget.Toast;
  */
 public class UIHelper {
 
-    private UIHelper() {
-    }
+    private UIHelper() {}
 
     private static class UIHelperHolder {
         private static final UIHelper instance = new UIHelper();
@@ -34,19 +31,6 @@ public class UIHelper {
 
     public static UIHelper getUIHelper() {
         return UIHelperHolder.instance;
-    }
-
-    static Toast toast = null;
-
-    public static void toast(String msg) {
-        toast = Toast.makeText(AppManager.getAppManager().currentActivity(),
-                msg, Toast.LENGTH_SHORT);
-        toast.show();
-    }
-
-    public static void toast(Context context, String msg) {
-        toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
-        toast.show();
     }
 
     PopupWindow popupWindow = null;
@@ -72,8 +56,7 @@ public class UIHelper {
                 float y = event.getY();
                 int utilX = maxW / 4;
                 int utilY = maxH;
-                FinalDb db = FinalDb.create(context, Config.DB_NAME,
-                        Config.isDebug);
+                KJDB db = KJDB.create(context, Config.DB_NAME, Config.isDebug);
                 if (x > 0 && x <= utilX && y > 0 && y < utilY) { // collect
                     which.setCollect(0);
                     db.update(which, "id = '" + which.getId() + "'");

@@ -3,8 +3,7 @@ package org.kymjs.music.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.tsz.afinal.FinalDb;
-
+import org.kymjs.kjframe.KJDB;
 import org.kymjs.music.Config;
 import org.kymjs.music.R;
 import org.kymjs.music.bean.Music;
@@ -23,8 +22,8 @@ import android.widget.TextView;
  * @author kymjs
  */
 public class MyMusicAdapter extends AbsPlayListAdapter {
-    private Context mContext;
-    private int currentPager;
+    private final Context mContext;
+    private final int currentPager;
     private List<Music> datas = null;
 
     public MyMusicAdapter(Context context, int current) {
@@ -99,8 +98,7 @@ public class MyMusicAdapter extends AbsPlayListAdapter {
         holder.img_collect.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                FinalDb db = FinalDb.create(mContext, Config.DB_NAME,
-                        Config.isDebug);
+                KJDB db = KJDB.create(mContext, Config.DB_NAME, Config.isDebug);
                 Music music = datas.get(position);
                 if (isCollect(position)) {
                     music.setCollect(0);

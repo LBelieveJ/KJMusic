@@ -1,12 +1,12 @@
 package org.kymjs.music.ui;
 
-import org.kymjs.music.AppManager;
+import org.kymjs.kjframe.KJActivity;
+import org.kymjs.kjframe.ui.KJActivityStack;
+import org.kymjs.kjframe.ui.ViewInject;
 import org.kymjs.music.R;
 import org.kymjs.music.utils.StringUtils;
-import org.kymjs.music.utils.UIHelper;
 
 import android.graphics.drawable.AnimationDrawable;
-import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -19,7 +19,7 @@ import android.widget.ViewSwitcher;
 /**
  * 用户登录对话框
  */
-public class LoginDialog extends BaseActivity {
+public class LoginDialog extends KJActivity {
 
     private ViewSwitcher mViewSwitcher;
     private ImageButton btn_close;
@@ -35,21 +35,20 @@ public class LoginDialog extends BaseActivity {
     public final static int LOGIN_SETTING = 0x02;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void setRootView() {
+        setContentView(R.layout.aty_login);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            AppManager.getAppManager().finishActivity(LoginDialog.this);
+            KJActivityStack.create().finishActivity(LoginDialog.this);
         }
         return super.onKeyDown(keyCode, event);
     }
 
     @Override
     public void initWidget() {
-        setContentView(R.layout.aty_login);
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
         mViewSwitcher = (ViewSwitcher) findViewById(R.id.logindialog_view_switcher);
@@ -73,11 +72,12 @@ public class LoginDialog extends BaseActivity {
             String pwd = mPwd.getText().toString();
             // 判断输入
             if (StringUtils.isEmpty(account)) {
-                UIHelper.toast(v.getContext(), v.getContext().getString(R.string.input_username));
+                ViewInject.toast(v.getContext(),
+                        v.getContext().getString(R.string.input_username));
                 return;
             }
             if (StringUtils.isEmpty(pwd)) {
-                UIHelper.toast(v.getContext(),
+                ViewInject.toast(v.getContext(),
                         v.getContext().getString(R.string.input_pwd));
                 return;
             }
@@ -87,7 +87,7 @@ public class LoginDialog extends BaseActivity {
             loadingAnimation.start();
             mViewSwitcher.showNext();
         } else if (v.getId() == R.id.login_close_button) {
-            AppManager.getAppManager().finishActivity(LoginDialog.this);
+            KJActivityStack.create().finishActivity(LoginDialog.this);
         }
     }
 }

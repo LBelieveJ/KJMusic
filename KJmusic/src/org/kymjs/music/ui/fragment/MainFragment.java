@@ -1,5 +1,8 @@
 package org.kymjs.music.ui.fragment;
 
+import org.kymjs.kjframe.ui.KJFragment;
+import org.kymjs.kjframe.ui.ViewInject;
+import org.kymjs.kjframe.utils.DensityUtils;
 import org.kymjs.music.Config;
 import org.kymjs.music.R;
 import org.kymjs.music.adapter.AbsPlayListAdapter;
@@ -11,7 +14,6 @@ import org.kymjs.music.ui.Main;
 import org.kymjs.music.ui.widget.JSViewPager;
 import org.kymjs.music.ui.widget.ResideMenu;
 import org.kymjs.music.utils.ListData;
-import org.kymjs.music.utils.UIHelper;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -44,27 +46,25 @@ import android.widget.TextView;
  * 
  * @author kymjs
  */
-public class MainFragment extends BaseFragment {
+public class MainFragment extends KJFragment {
     // 界面控件
     private JSViewPager jsViewPager;
     private TextView mTextTab1, mTextTab2, mTextTab3;
     // 顶部图片
-    private int offset = 0;// 动画图片偏移量
     private int currIndex = 0;// 当前页卡编号
-    private int bmpW;// 动画图片宽度
     private ImageView mImgLine;
     // 侧滑界面控件
     private ResideMenu resideMenu;
     // listView刷新广播接收器
-    private RefreshAdapterReceiver receiver = new RefreshAdapterReceiver();
+    private final RefreshAdapterReceiver receiver = new RefreshAdapterReceiver();
 
     // ViewPager中的控件
     private AbsPlayListAdapter myMusicAdp, collectAdp; // 主界面中ListView适配器
     private ListView mMyMusicList, mCollectList; // Pager中的List
 
     @Override
-    public View setView(LayoutInflater inflater, ViewGroup container,
-            Bundle bundle) {
+    protected View inflaterView(LayoutInflater inflater, ViewGroup container,
+            Bundle arg2) {
         View view = inflater.inflate(R.layout.frag_main, container, false);
         return view;
     }
@@ -103,21 +103,19 @@ public class MainFragment extends BaseFragment {
     private void initViewPager(View parentView) {
         jsViewPager = (JSViewPager) parentView.findViewById(R.id.main_pager);
         jsViewPager.setAdapter(new MainPagerAdapter(3));
-        jsViewPager.setCurrentItem(0);
+        jsViewPager.setCurrentItem(1);
         jsViewPager.setOnPageChangeListener(new OnPageChangeListener() {
             @Override
-            public void onPageScrollStateChanged(int arg0) {
-            }
+            public void onPageScrollStateChanged(int arg0) {}
 
             @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-            }
+            public void onPageScrolled(int arg0, float arg1, int arg2) {}
 
             @Override
             public void onPageSelected(int arg0) {
-                int one = offset * 2 + bmpW;// 页卡1 -> 页卡2 偏移量
-                Animation animation = new TranslateAnimation(one * currIndex,
-                        one * arg0, 0, 0);
+                int offset = mTextTab3.getMeasuredWidth();
+                Animation animation = new TranslateAnimation(offset
+                        * (currIndex - 1), offset * (arg0 - 1), 0, 0);
                 currIndex = arg0;
                 animation.setFillAfter(true);// 图片停在动画结束位置
                 animation.setDuration(300);
@@ -142,7 +140,7 @@ public class MainFragment extends BaseFragment {
         // 获取设备屏幕宽度
         WindowManager window = (WindowManager) getActivity().getSystemService(
                 Context.WINDOW_SERVICE);
-        int screenW = window.getDefaultDisplay().getWidth();
+        int screenW = DensityUtils.getScreenW(getActivity());
 
         Matrix matrix = new Matrix();
         // 将宽度按(目标宽度/原宽度)放大，高度没有改变，则比例为1
@@ -150,10 +148,6 @@ public class MainFragment extends BaseFragment {
         // 得到放大的图片
         bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
                 bitmap.getHeight(), matrix, true);
-        // 得到放大后的图片宽度
-        bmpW = bitmap.getWidth();
-        // 计算偏移量
-        offset = (screenW / pagers - bmpW);
         // matrix.postTranslate(offset, 0);//默认显示位置
         // mImgLine.setImageMatrix(matrix);// 设置动画初始位置
         // 设置ImageView的图片
@@ -222,7 +216,7 @@ public class MainFragment extends BaseFragment {
                 mCollectList.setAdapter(collectAdp);
                 ((Main) getActivity()).lyricFragment.refreshLrcView();
             } else {
-                UIHelper.toast("呀，扫描失败了，退出再进试试？");
+                ViewInject.toast("呀，扫描失败了，退出再进试试？");
             }
         }
     }
@@ -233,7 +227,7 @@ public class MainFragment extends BaseFragment {
      * 
      ***************************************************************************************/
     class MainPagerAdapter extends PagerAdapter implements OnItemClickListener {
-        private int pagers;
+        private final int pagers;
 
         public MainPagerAdapter(int pagers) {
             super();
@@ -259,7 +253,7 @@ public class MainFragment extends BaseFragment {
         public Object instantiateItem(ViewGroup container, int position) {
             View mainPagerView = getPagerView(position);
             if (mainPagerView == null) {
-                mainPagerView = (ListView) View.inflate(getActivity(),
+                mainPagerView = View.inflate(getActivity(),
                         R.layout.pager_item_main, null);
             }
             (container).addView(mainPagerView);
@@ -305,7 +299,7 @@ public class MainFragment extends BaseFragment {
                                     "com.douban.radio.app.WelcomeActivity"));
                         } catch (NameNotFoundException e) {
                             intent.setClass(getActivity(), FMActivity.class);
-                            UIHelper.toast("您还未安装豆瓣FM");
+                            ViewInject.toast("您还未安装豆瓣FM");
                             e.printStackTrace();
                         }
                         startActivity(intent);
